@@ -79,6 +79,29 @@ namespace sf.elasticsearch.demo.Controllers
             return Ok(asyncIndexResponse);
         }
 
+        public IActionResult HighLevelSearchPersonByNameAsync(string name)
+        {
+            // Connecting using additional settings
+            var settings = new ConnectionSettings(new Uri("http://localhost:9200")).DefaultIndex("people");
+
+            var client = new ElasticClient(settings);
+
+            var searchResponse = client.Search<Person>(s => s
+                .From(0)
+                .Size(10)
+                .Query(q => q
+                        .Match(m => m
+                        .Field(f => f.FirstName)
+                        .Query(name)
+                        )
+                )
+            );
+
+            var people = searchResponse.Documents;
+
+            return Ok(people);
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
