@@ -3,3 +3,18 @@
 }
 
 <h1>SoftFluent - ElasticSearch - Demo</h1>
+
+<h2>Low Level Client - ElasticSearch.Net</h2>
+<div class="button-wrapper">
+    <a asp-controller="Home" asp-action="LowLevelNewIndexAsync" class="btn btn-primary">Create Index</a>
+</div>
+<div class="button-wrapper">
+    <a asp-controller="Home" asp-action="LowLevelSearchPersonByNameAsync" asp-route-name="ignacio" class="btn btn-primary">Search Person by First Name Ignacio</a>
+</div>
+<div class="button-wrapper">
+    <a asp-controller="Home" asp-action="LowLevelSearchPersonByNameAsync" asp-route-name="sebastian" class="btn btn-primary">Search Person by First Name Sebastian</a>
+</div>
+
+<hr />
+
+<h2>High Level Client - NEST</h2>
