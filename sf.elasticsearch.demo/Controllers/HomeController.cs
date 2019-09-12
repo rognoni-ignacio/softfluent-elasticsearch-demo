@@ -4,6 +4,7 @@ using sf.elasticsearch.demo.Models;
 using Elasticsearch.Net;
 using System;
 using sf.elasticsearch.demo.Domain;
+using Nest;
 
 namespace sf.elasticsearch.demo.Controllers
 {
@@ -23,7 +24,11 @@ namespace sf.elasticsearch.demo.Controllers
             var lowlevelClient = new ElasticLowLevelClient(settings);
 
             // Indexing
-            var person = new Person("Ignacio", "Rognoni");
+            var person = new
+            {
+                firstName = "Ignacio",
+                lastName = "Rognoni"
+            };
 
             // Async method
             var asyncIndexResponse = await lowlevelClient.IndexAsync<StringResponse>("people", "1", PostData.Serializable(person));
@@ -48,7 +53,7 @@ namespace sf.elasticsearch.demo.Controllers
                 {
                     multi_match = new
                     {
-                        fields = "FirstName",
+                        fields = "firstName",
                         query = name
                     }
                 }
@@ -57,6 +62,21 @@ namespace sf.elasticsearch.demo.Controllers
             var responseJson = searchResponse.Body;
 
             return Ok(responseJson);
+        }
+
+        public async System.Threading.Tasks.Task<IActionResult> HighLevelNewIndexAsync()
+        {
+            // Connecting using additional settings
+            var settings = new ConnectionSettings(new Uri("http://localhost:9200")).DefaultIndex("people");
+
+            var client = new ElasticClient(settings);
+
+            // Indexing
+            var person = new Person(2, "Sebastien", "Gissinger");
+
+            var asyncIndexResponse = await client.IndexDocumentAsync(person);
+
+            return Ok(asyncIndexResponse);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
